@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: api-gateway
+  security:
+    oauth2:
+      client:
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:9090/realms/crm
+        registration:
+          gateway-client:
+            provider: keycloak
+            client-id: gateway-client
+            client-secret: UakJnRBYalsV42peJL7hmHMuydPxMFWd
+            scope:
+              - openid
+              - offline_access
+            authorization-grant-type: authorization_code
+            redirect-uri: http://localhost:8080/login/oauth2/code/gateway-client
