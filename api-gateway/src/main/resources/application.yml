@@ -17,3 +17,14 @@ spring:
               - offline_access
             authorization-grant-type: authorization_code
             redirect-uri: http://localhost:8080/login/oauth2/code/gateway-client
+  cloud:
+    gateway:
+      mvc:
+        routes:
+          - id: crm
+            uri: http://localhost:9000
+            predicates:
+              - Path=/api/crm/**
+            filters:
+              - StripPrefix=2
+              - TokenRelay
