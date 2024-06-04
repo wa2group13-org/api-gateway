@@ -28,3 +28,11 @@ spring:
             filters:
               - StripPrefix=2
               - TokenRelay
+# "WORKS" but in reality it doesn't (no redirect)
+#          - id: ui
+#            uri: http://localhost:5173/
+#            predicates:
+#              - Path=/ui/**
+#            filters:
+#              - StripPrefix=1
+#              - TokenRelay
