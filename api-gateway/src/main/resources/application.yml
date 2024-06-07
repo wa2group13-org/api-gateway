@@ -20,19 +20,23 @@ spring:
   cloud:
     gateway:
       mvc:
+        http-client:
+          type: autodetect
         routes:
-          - id: crm
-            uri: http://localhost:9000
-            predicates:
-              - Path=/api/crm/**
-            filters:
-              - StripPrefix=2
-              - TokenRelay
-# "WORKS" but in reality it doesn't (no redirect)
-#          - id: ui
-#            uri: http://localhost:5173/
+#          - id: crm
+#            uri: http://localhost:9000
 #            predicates:
-#              - Path=/ui/**
+#              - Path=/api/crm/**
 #            filters:
-#              - StripPrefix=1
+#              - StripPrefix=2
 #              - TokenRelay
+          - id: ui
+            uri: http://localhost:5173
+            predicates:
+              - Path=/ui/**
+          - id: home
+            uri: http://localhost:8080
+            predicates:
+              - Path=/
+            filters:
+              - RedirectTo=301,http://localhost:8080/ui

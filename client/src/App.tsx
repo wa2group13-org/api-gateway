@@ -1,13 +1,20 @@
 import {Route, Routes, BrowserRouter as Router} from "react-router-dom";
 import HomePage from "./pages/HomePage";
+import {useApp} from "./App.hooks.ts";
+import UserContext from "./contexts/userContext.ts";
 
-function App() {
+export function App() {
+    const {
+        user
+    } = useApp()
 
     return (
         <Router>
-            <Routes>
-                <Route index path="/" element={<HomePage/>}/>
-            </Routes>
+            <UserContext.Provider value={user}>
+                <Routes>
+                    <Route index path="/ui" element={<HomePage/>}/>
+                </Routes>
+            </UserContext.Provider>
         </Router>
     )
 }

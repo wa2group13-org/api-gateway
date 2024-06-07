@@ -1,6 +1,8 @@
+'use strict'
+
 import axios from "axios";
 
-const API = import.meta.env.VITE_API_URL
+const API = "";
 
 export const api = axios.create({
     baseURL: `${API}`,

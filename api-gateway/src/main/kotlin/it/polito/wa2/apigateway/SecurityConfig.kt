@@ -16,17 +16,21 @@ class SecurityConfig(
 ) {
     // Handle RP-initiated logout
     fun oidcLogoutSuccessHandler() = OidcClientInitiatedLogoutSuccessHandler(crr)
-        .also { it.setPostLogoutRedirectUri("http://localhost:8080/") }
+        .also { it.setPostLogoutRedirectUri("http://localhost:8080") }
 
     @Bean
     fun securityFilterChain(httpSecurity: HttpSecurity): SecurityFilterChain {
         return httpSecurity
             .authorizeHttpRequests {
-                it.requestMatchers("/test", "/login").permitAll()
+                it.requestMatchers("/","/user","/login","/ui/**").permitAll()
             }
-            .oauth2Login { }
+            .oauth2Login {  }
             .logout { it.logoutSuccessHandler(oidcLogoutSuccessHandler()) }
-            .csrf { it.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) }
+//            .csrf {
+//                it.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+//            }
+            .csrf { it.disable() }
+            .cors { it.disable() }
             .build()
     }
 }
