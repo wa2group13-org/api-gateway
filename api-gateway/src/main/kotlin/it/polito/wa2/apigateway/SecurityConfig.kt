@@ -7,6 +7,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.oauth2.client.oidc.web.logout.OidcClientInitiatedLogoutSuccessHandler
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository
 
 @Configuration
@@ -26,11 +27,13 @@ class SecurityConfig(
             }
             .oauth2Login {  }
             .logout { it.logoutSuccessHandler(oidcLogoutSuccessHandler()) }
-//            .csrf {
-//                it.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-//            }
-            .csrf { it.disable() }
-            .cors { it.disable() }
+            .csrf {
+                it.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                it.csrfTokenRequestHandler(SpaCsrfTokenRequestHandler())
+            }
+//            .csrf { it.disable() }
+//            .cors { it.disable() }
+            .addFilterAfter(CsrfCookieFilter(), BasicAuthenticationFilter::class.java)
             .build()
     }
 }

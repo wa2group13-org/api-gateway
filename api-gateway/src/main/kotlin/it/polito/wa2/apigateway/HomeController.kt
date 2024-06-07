@@ -11,8 +11,8 @@ class HomeController {
 
     @GetMapping("/user")
     fun user(
-        @CookieValue(name = "XSRF-TOKEN", required = false)
-        xsrf: String?,
+        @CookieValue(name = "XSRF-TOKEN", required = true)
+        xsrf: String,
         authentication: Authentication?
     ): Map<String, Any?> {
         val principal: OidcUser? = authentication?.principal as? OidcUser

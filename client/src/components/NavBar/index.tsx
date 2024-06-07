@@ -23,6 +23,7 @@ const NavBar = (/*{user}: { user: UserInterface | null}*/) => {
                 <span style={{marginRight: "1em"}}>
                     {user.name}
                 </span>
+                <input type={"hidden"} name={"_csrf"} value={user.xsrfToken}/>
                 <button type={"submit"}>
                     Logout
                 </button>
