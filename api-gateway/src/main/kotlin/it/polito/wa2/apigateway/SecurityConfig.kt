@@ -24,6 +24,7 @@ class SecurityConfig(
         return httpSecurity
             .authorizeHttpRequests {
                 it.requestMatchers("/","/user","/login","/ui/**").permitAll()
+                it.anyRequest().authenticated()
             }
             .oauth2Login {  }
             .logout { it.logoutSuccessHandler(oidcLogoutSuccessHandler()) }
@@ -31,8 +32,6 @@ class SecurityConfig(
                 it.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 it.csrfTokenRequestHandler(SpaCsrfTokenRequestHandler())
             }
-//            .csrf { it.disable() }
-//            .cors { it.disable() }
             .addFilterAfter(CsrfCookieFilter(), BasicAuthenticationFilter::class.java)
             .build()
     }

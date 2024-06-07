@@ -1,6 +1,7 @@
 services:
   keycloak:
     image: keycloak/keycloak:24.0
+    hostname: keycloak
     ports:
       - 127.0.0.1:9090:8080
     environment:
@@ -9,3 +10,112 @@ services:
     volumes:
       - ./realm:/opt/keycloak/data/import
     command: start-dev --import-realm
+
+  # Used to access hostnames from the host machine
+  docker-hoster:
+    image: dvdarias/docker-hoster:latest
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock
+      - /etc/hosts:/tmp/hosts
+
+  cm:
+    image: wa2group13/communication_manager:1.0.0
+    ports:
+      - 127.0.0.1:8083:8080
+    environment:
+      APPLICATION_NAME: ${APPLICATION_NAME}
+      CLIENT_ID: ${CLIENT_ID}
+      CLIENT_SECRET: ${CLIENT_SECRET}
+      REFRESH_TOKEN: ${REFRESH_TOKEN}
+      SPRING_PROFILES_ACTIVE: prod
+      KAFKA_PRODUCER_BOOTSTRAP_SERVERS: kafka:29092
+      JWT_ISSUER_URI: http://keycloak:8080/realms/crm
+    depends_on:
+      - kafka
+      - keycloak
+
+  crm:
+    image: wa2group13/crm:1.0.1
+    ports:
+      - 127.0.0.1:8081:8080
+    environment:
+      POSTGRES_URL: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: crm
+      POSTGRES_USERNAME: crm
+      POSTGRES_PASSWORD: crm
+      SPRING_PROFILES_ACTIVE: prod
+      KAFKA_CONSUMER_BOOTSTRAP_SERVERS: kafka:29092
+      JWT_ISSUER_URI: http://keycloak:8080/realms/crm
+    depends_on:
+      - postgres
+      - kafka
+      - keycloak
+
+  document-store:
+    image: wa2group13/document_store:1.0.1
+    ports:
+      - 127.0.0.1:8082:8080
+    environment:
+      POSTGRES_URL: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: document_store
+      POSTGRES_USERNAME: document_store
+      POSTGRES_PASSWORD: document_store
+      SPRING_PROFILES_ACTIVE: prod
+      KAFKA_CONSUMER_BOOTSTRAP_SERVERS: kafka:29092
+      JWT_ISSUER_URI: http://keycloak:8080/realms/crm
+      MULTIPART_MAX_FILE_SIZE: 10MB
+      MULTIPART_MAX_REQUEST_SIZE: 10MB
+    depends_on:
+      - postgres
+      - kafka
+      - keycloak
+
+  postgres:
+    image: postgres:16.2
+    hostname: postgres
+    ports:
+      - 127.0.0.1:5432:5432
+    environment:
+      POSTGRES_MULTIPLE_DB: crm,document_store
+      POSTGRES_MULTIPLE_PASSWORD: crm,document_store
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+    volumes:
+      - ./init_scripts/init_database.sh:/docker-entrypoint-initdb.d/init_database.sh:ro
+      - pg-data:/var/lib/postgresql/data
+
+  kafka:
+    image: bitnami/kafka:3.7
+    hostname: kafka
+    ports:
+      - 9092:9092
+    volumes:
+      - kafka-data:/bitnami
+      - ./init_scripts/run-init-kafka-topics.sh:/docker-entrypoint-initdb.d/run-init-kafka-topics.sh:ro
+      - ./init_scripts/init-kafka-topics.sh:/init-kafka-topics.sh:ro
+    environment:
+      KAFKA_CFG_NODE_ID: 0
+      KAFKA_CFG_PROCESS_ROLES: controller,broker
+      KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 0@kafka:9093
+      KAFKA_CFG_LISTENERS: PLAINTEXT://:29092,CONTROLLER://:9093,PLAINTEXT_HOST://:9092
+      KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CFG_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_CFG_MESSAGE_MAX_BYTES: 10485760
+
+  kafka-ui:
+    hostname: kafka-ui
+    image: provectuslabs/kafka-ui:latest
+    ports:
+      - 9010:8080
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
+      DYNAMIC_CONFIG_ENABLED: 'true'
+
+volumes:
+  pg-data:
+  kafka-data:

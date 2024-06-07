@@ -41,3 +41,6 @@ out/
 
 ### Production ###
 secrets.sh
+
+### Docker Compose ###
+.env
