@@ -56,7 +56,7 @@ class RoutesConfig {
                         f.redirect(HttpStatus.MOVED_PERMANENTLY, URI.create("http://localhost:8080/ui").toURL())
                     }
                     .uri(
-                        "http://localhost:5173"
+                        "http://localhost:8080"
                     )
             }
             .build()

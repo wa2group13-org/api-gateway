@@ -17,40 +17,9 @@ spring:
               - offline_access
             authorization-grant-type: authorization_code
             redirect-uri: ${REDIRECT_URI:http://localhost:8080/login/oauth2/code/gateway-client}
-  cloud:
-    gateway:
-      mvc:
-        http-client:
-          type: autodetect
-        routes:
-          - id: crm
-            uri: ${CRM_URI:http://localhost:8081}
-            predicates:
-              - Path=/crm/**
-            filters:
-              - StripPrefix=1
-              - TokenRelay
-          - id: document_store
-            uri: ${DOCUMENT_STORE_URI:http://localhost:8082}
-            predicates:
-              - Path=/document_store/**
-            filters:
-              - StripPrefix=1
-              - TokenRelay
-          - id: communication_manager
-            uri: ${COMMUNICATION_MANGER_URI:http://localhost:8083}
-            predicates:
-              - Path=/communication_manager/**
-            filters:
-              - StripPrefix=1
-              - TokenRelay
-          - id: ui
-            uri: http://localhost:5173
-            predicates:
-              - Path=/ui/**
-          - id: home
-            uri: http://localhost:8080
-            predicates:
-              - Path=/
-            filters:
-              - RedirectTo=301,http://localhost:8080/ui
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+  instance:
+    preferIpAddress: true
