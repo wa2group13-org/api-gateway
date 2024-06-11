@@ -8,6 +8,7 @@ plugins {
 	kotlin("jvm") version "1.9.24"
 	kotlin("plugin.spring") version "1.9.24"
 }
+val springCloudVersion by extra("2023.0.2")
 
 group = "it.polito.wa2"
 version = "0.0.1-SNAPSHOT"
@@ -31,9 +32,11 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.springframework.boot:spring-boot-starter-web")
-	implementation("org.springframework.cloud:spring-cloud-starter-gateway-mvc:4.1.4")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
+	implementation("org.springframework.cloud:spring-cloud-starter-gateway-mvc")
+	implementation("org.springframework.cloud:spring-cloud-starter-gateway")
+	implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
 
 	developmentOnly("org.springframework.boot:spring-boot-docker-compose")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
@@ -62,6 +65,11 @@ tasks.named<BootBuildImage>("bootBuildImage") {
             password = System.getenv("DOCKER_PASSWORD")
         }
     }
+}
+dependencyManagement {
+	imports {
+		mavenBom("org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion")
+	}
 }
 
 abstract class ProjectVersion : DefaultTask() {
