@@ -35,7 +35,7 @@ services:
       - keycloak
 
   crm:
-    image: wa2group13/crm:1.0.1
+    image: null/crm:1.0.1
     ports:
       - 127.0.0.1:8081:8080
     environment:
@@ -44,7 +44,8 @@ services:
       POSTGRES_DB: crm
       POSTGRES_USERNAME: crm
       POSTGRES_PASSWORD: crm
-      SPRING_PROFILES_ACTIVE: prod
+      SPRING_PROFILES_ACTIVE: prod,api-docs
+      BASE_URL: ${BASE_URL}/crm
       KAFKA_CONSUMER_BOOTSTRAP_SERVERS: kafka:29092
       JWT_ISSUER_URI: http://keycloak:8080/realms/crm
     depends_on:
