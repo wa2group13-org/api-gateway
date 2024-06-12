@@ -3,7 +3,7 @@
 import os
 import shutil
 
-services = ['crm', ]
+services = ['crm', 'document_store', 'communication_manager']
 env_services = f'SERVICES={",".join(services)}'
 profiles = 'SPRING_PROFILES_ACTIVE=api-docs,no-security'
 
@@ -12,7 +12,7 @@ os.system(f'{env_services} {profiles} ./gradlew generateOpenApiDocs --info --rer
 services += ['api-gateway']
 
 print('Create ouptut folder for typescript-axios')
-out_axios = 'build/typescritp-axios-full'
+out_axios = 'build/typescript-axios-full'
 os.makedirs(out_axios, exist_ok=True)
 for service in services:
     os.system(f'{env_services} GENERATOR_NAME=typescript-axios INPUT_SPEC=openapi-{service}.json {profiles} ./gradlew openApiGenerate --info --rerun')
@@ -26,3 +26,6 @@ for service in services:
         shutil.copyfile(f'{out_generator}/{file}', f'{out_axios}/{service}/{file}')
 
     shutil.rmtree(f'{out_generator}', True)
+
+print('Creating archive...')
+os.system(f'tar -v -czf {out_axios}.tar.gz {out_axios}')

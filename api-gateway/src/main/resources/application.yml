@@ -60,6 +60,12 @@ spring:
             filters:
               - RedirectTo=301,http://localhost:8080/ui
 
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false
+
 server:
   port: ${PORT:8080}
 
