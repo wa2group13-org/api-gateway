@@ -31,6 +31,7 @@ services:
       KAFKA_PRODUCER_BOOTSTRAP_SERVERS: kafka:29092
       JWT_ISSUER_URI: http://keycloak:8080/realms/crm
       EUREKA_URI: http://eureka-server:8761/eureka
+      spring.application.name: communication-manager
     depends_on:
       - kafka
       - keycloak
@@ -70,6 +71,7 @@ services:
       MULTIPART_MAX_FILE_SIZE: 10MB
       MULTIPART_MAX_REQUEST_SIZE: 10MB
       EUREKA_URI: http://eureka-server:8761/eureka
+      spring.application.name: document-store
     depends_on:
       - postgres
       - kafka

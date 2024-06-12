@@ -30,10 +30,10 @@ spring:
             filters:
               - StripPrefix=1
               - TokenRelay
-          - id: document_store
-            uri: ${DOCUMENT_STORE_URI:lb://DOCUMENT_STORE}
+          - id: document-store
+            uri: ${DOCUMENT_STORE_URI:lb://DOCUMENT-STORE}
             predicates:
-              - Path=/document_store/**
+              - Path=/document-store/**
             filters:
               - StripPrefix=1
               - TokenRelay
