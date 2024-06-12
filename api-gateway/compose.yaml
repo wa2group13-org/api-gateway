@@ -30,6 +30,8 @@ services:
       SPRING_PROFILES_ACTIVE: prod,api-docs,no-gmail
       KAFKA_PRODUCER_BOOTSTRAP_SERVERS: kafka:29092
       JWT_ISSUER_URI: http://keycloak:8080/realms/crm
+      EUREKA_URI: http://eureka-server:8761/eureka
+      spring.application.name: communication-manager
     depends_on:
       - kafka
       - keycloak
@@ -48,6 +50,7 @@ services:
       BASE_URL: ${BASE_URL}/crm
       KAFKA_CONSUMER_BOOTSTRAP_SERVERS: kafka:29092
       JWT_ISSUER_URI: http://keycloak:8080/realms/crm
+      EUREKA_URI: http://eureka-server:8761/eureka
     depends_on:
       - postgres
       - kafka
@@ -68,10 +71,18 @@ services:
       JWT_ISSUER_URI: http://keycloak:8080/realms/crm
       MULTIPART_MAX_FILE_SIZE: 10MB
       MULTIPART_MAX_REQUEST_SIZE: 10MB
+      EUREKA_URI: http://eureka-server:8761/eureka
+      spring.application.name: document-store
     depends_on:
       - postgres
       - kafka
       - keycloak
+
+  eureka_server:
+    image: wa2group13/eureka_server:1.0.0
+    ports:
+      - 127.0.0.1:8761:8761
+    hostname: eureka-server
 
   postgres:
     image: postgres:16.2

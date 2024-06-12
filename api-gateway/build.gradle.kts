@@ -13,6 +13,7 @@ plugins {
     id("io.spring.dependency-management") version "1.1.4"
     id("org.asciidoctor.jvm.convert") version "4.0.2"
 }
+val springCloudVersion by extra("2023.0.2")
 
 group = "it.polito.wa2"
 version = "0.0.1-SNAPSHOT"
@@ -40,6 +41,7 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
     // Needed by springdoc-openapi
     implementation("com.github.therapi:therapi-runtime-javadoc:0.15.0")
     kapt("com.github.therapi:therapi-runtime-javadoc-scribe:0.15.0")
@@ -71,6 +73,11 @@ tasks.named<BootBuildImage>("bootBuildImage") {
             username = System.getenv("DOCKER_USERNAME")
             password = System.getenv("DOCKER_PASSWORD")
         }
+    }
+}
+dependencyManagement {
+    imports {
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion")
     }
 }
 

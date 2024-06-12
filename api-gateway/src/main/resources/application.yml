@@ -29,21 +29,21 @@ spring:
           type: autodetect
         routes:
           - id: crm
-            uri: ${CRM_URI:http://localhost:8081}
+            uri: ${CRM_URI:lb://CRM}
             predicates:
               - Path=/${CRM_BASE:crm}/**
             filters:
               - StripPrefix=1
               - TokenRelay
           - id: document_store
-            uri: ${DOCUMENT_STORE_URI:http://localhost:8082}
+            uri: ${DOCUMENT_STORE_URI:lb://DOCUMENT-STORE}
             predicates:
               - Path=/${DOCUMENT_STORE_BASE:document_store}/**
             filters:
               - StripPrefix=1
               - TokenRelay
           - id: communication_manager
-            uri: ${COMMUNICATION_MANGER_URI:http://localhost:8083}
+            uri: ${COMMUNICATION_MANGER_URI:lb://COMMUNICATION-MANAGER}
             predicates:
               - Path=/${COMMUNICATION_MANAGER_BASE:communication_manager}/**
             filters:
@@ -71,3 +71,10 @@ server:
 
 openapi:
   base-url: ${OPENAPI_BASE_URL:http://localhost:8080:${server.port}}
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+  instance:
+    preferIpAddress: true
