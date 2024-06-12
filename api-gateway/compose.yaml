@@ -78,8 +78,8 @@ services:
       - kafka
       - keycloak
 
-  eureka_server:
-    image: wa2group13/eureka_server:1.0.0
+  eureka-server:
+    image: wa2group13/eureka-server:1.0.0
     ports:
       - 127.0.0.1:8761:8761
     hostname: eureka-server

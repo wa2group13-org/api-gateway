@@ -3,14 +3,14 @@ import org.springframework.boot.gradle.tasks.bundling.BootBuildImage
 import java.util.*
 
 plugins {
+    id("idea")
+    id("org.springframework.boot") version "3.2.4"
+    id("io.spring.dependency-management") version "1.1.4"
     kotlin("jvm") version "1.9.24"
     kotlin("kapt") version "1.9.24"
     kotlin("plugin.spring") version "1.9.24"
-    id("idea")
-    id("org.springframework.boot") version "3.2.4"
     id("org.springdoc.openapi-gradle-plugin") version "1.8.0"
     id("org.openapi.generator") version "7.5.0"
-    id("io.spring.dependency-management") version "1.1.4"
     id("org.asciidoctor.jvm.convert") version "4.0.2"
 }
 val springCloudVersion by extra("2023.0.2")
@@ -105,7 +105,7 @@ tasks.withType<ProcessResources> {
 }
 
 tasks.generateOpenApiDocs {
-    val services = System.getenv("SERVICES").split(",")
+    val services = System.getenv("SERVICES")?.split(",") ?: listOf()
 
     waitTimeInSeconds = 60 * 3
     groupedApiMappings.apply {
