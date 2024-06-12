@@ -1,4 +1,4 @@
-package it.polito.wa2.apigateway
+package it.polito.wa2.apigateway.config
 
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse

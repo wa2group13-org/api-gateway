@@ -1,4 +1,4 @@
-package it.polito.wa2.apigateway
+package it.polito.wa2.apigateway.config
 
 import jakarta.servlet.FilterChain
 import jakarta.servlet.ServletException
