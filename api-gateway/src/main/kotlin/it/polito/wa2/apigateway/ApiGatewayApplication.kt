@@ -2,7 +2,9 @@ package it.polito.wa2.apigateway
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient
 
+@EnableDiscoveryClient
 @SpringBootApplication
 class ApiGatewayApplication
 
