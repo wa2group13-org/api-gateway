@@ -19,7 +19,7 @@ services:
       - /etc/hosts:/tmp/hosts
 
   cm:
-    image: wa2group13/communication_manager:1.0.0
+    image: wa2group13/communication_manager:1.1.0
     ports:
       - 127.0.0.1:8083:8080
     environment:
@@ -27,15 +27,17 @@ services:
       CLIENT_ID: ${CLIENT_ID}
       CLIENT_SECRET: ${CLIENT_SECRET}
       REFRESH_TOKEN: ${REFRESH_TOKEN}
-      SPRING_PROFILES_ACTIVE: prod
+      SPRING_PROFILES_ACTIVE: prod,api-docs,no-gmail
       KAFKA_PRODUCER_BOOTSTRAP_SERVERS: kafka:29092
       JWT_ISSUER_URI: http://keycloak:8080/realms/crm
+      EUREKA_URI: http://eureka-server:8761/eureka
+      spring.application.name: communication-manager
     depends_on:
       - kafka
       - keycloak
 
   crm:
-    image: wa2group13/crm:1.0.1
+    image: wa2group13/crm:1.1.0
     ports:
       - 127.0.0.1:8081:8080
     environment:
@@ -44,16 +46,18 @@ services:
       POSTGRES_DB: crm
       POSTGRES_USERNAME: crm
       POSTGRES_PASSWORD: crm
-      SPRING_PROFILES_ACTIVE: prod
+      SPRING_PROFILES_ACTIVE: prod,api-docs
+      BASE_URL: ${BASE_URL}/crm
       KAFKA_CONSUMER_BOOTSTRAP_SERVERS: kafka:29092
       JWT_ISSUER_URI: http://keycloak:8080/realms/crm
+      EUREKA_URI: http://eureka-server:8761/eureka
     depends_on:
       - postgres
       - kafka
       - keycloak
 
   document-store:
-    image: wa2group13/document_store:1.0.1
+    image: wa2group13/document_store:1.1.0
     ports:
       - 127.0.0.1:8082:8080
     environment:
@@ -62,15 +66,23 @@ services:
       POSTGRES_DB: document_store
       POSTGRES_USERNAME: document_store
       POSTGRES_PASSWORD: document_store
-      SPRING_PROFILES_ACTIVE: prod
+      SPRING_PROFILES_ACTIVE: prod,api-docs
       KAFKA_CONSUMER_BOOTSTRAP_SERVERS: kafka:29092
       JWT_ISSUER_URI: http://keycloak:8080/realms/crm
       MULTIPART_MAX_FILE_SIZE: 10MB
       MULTIPART_MAX_REQUEST_SIZE: 10MB
+      EUREKA_URI: http://eureka-server:8761/eureka
+      spring.application.name: document-store
     depends_on:
       - postgres
       - kafka
       - keycloak
+
+  eureka-server:
+    image: wa2group13/eureka-server:1.0.0
+    ports:
+      - 127.0.0.1:8761:8761
+    hostname: eureka-server
 
   postgres:
     image: postgres:16.2
