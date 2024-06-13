@@ -8,10 +8,12 @@ import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper
 import org.springframework.security.oauth2.client.oidc.web.logout.OidcClientInitiatedLogoutSuccessHandler
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository
 import org.springframework.security.oauth2.core.oidc.user.OidcUserAuthority
+import org.springframework.security.oauth2.core.user.OAuth2UserAuthority
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository
@@ -37,7 +39,6 @@ class SecurityConfig(
 
             authorities.forEach { authority ->
                 if (authority is OidcUserAuthority) {
-//                    val idToken = authority.idToken
                     val userInfo = authority.userInfo
 
                     // Map the claims found in idToken and/or userInfo
@@ -47,16 +48,24 @@ class SecurityConfig(
                         ?.let { it as? Map<*, *> }
                         ?.get("roles")
                         ?.let { it as? List<*> }
-                        ?.map { GrantedAuthority { it.toString() } }
+                        ?.map { SimpleGrantedAuthority("ROLE_$it") }
+                        ?: listOf()
+
+                    mappedAuthorities.addAll(roles)
+                } else if (authority is OAuth2UserAuthority) {
+                    val userAttributes = authority.attributes
+
+                    // Map the attributes found in userAttributes
+                    // to one or more GrantedAuthority's and add it to mappedAuthorities
+                    val roles = userAttributes["realm_access"]
+                        ?.let { it as? Map<*, *> }
+                        ?.get("roles")
+                        ?.let { it as List<*> }
+                        ?.map { SimpleGrantedAuthority("ROLE_$it") }
                         ?: listOf()
 
                     mappedAuthorities.addAll(roles)
                 }
-//                else if (authority is OAuth2UserAuthority) {
-//                    val userAttributes = authority.attributes
-//                    // Map the attributes found in userAttributes
-//                    // to one or more GrantedAuthority's and add it to mappedAuthorities
-//                }
             }
 
             mappedAuthorities
