@@ -20,7 +20,7 @@
     } ],
     "disableableCredentialTypes" : [ ],
     "requiredActions" : [ ],
-    "realmRoles" : [ "default-roles-crm" ],
+    "realmRoles" : [ "ROLE_OPERATOR", "default-roles-crm" ],
     "notBefore" : 0,
     "groups" : [ ]
   }, {
@@ -43,7 +43,7 @@
     } ],
     "disableableCredentialTypes" : [ ],
     "requiredActions" : [ ],
-    "realmRoles" : [ "default-roles-crm" ],
+    "realmRoles" : [ "default-roles-crm", "ROLE_ADMIN" ],
     "notBefore" : 0,
     "groups" : [ ]
   } ]

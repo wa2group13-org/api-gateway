@@ -17,3 +17,4 @@
 - `OPENAPI_BASE_URL`: base url of this service that will appear in the OpenAPI documentation.
   Default `http://localhost:${PORT}`
 - `PORT`: server port. Default: `8080`
+- `LOGOUT_REDIRECT_URL`: redirect url when performing a logout
