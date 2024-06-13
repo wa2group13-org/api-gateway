@@ -19,7 +19,7 @@ services:
       - /etc/hosts:/tmp/hosts
 
   cm:
-    image: wa2group13/communication_manager:1.1.1
+    image: wa2group13/communication_manager:1.2.0
     ports:
       - 127.0.0.1:8083:8080
     environment:
@@ -37,7 +37,7 @@ services:
       - keycloak
 
   crm:
-    image: wa2group13/crm:1.1.0
+    image: wa2group13/crm:1.2.0
     ports:
       - 127.0.0.1:8081:8080
     environment:
@@ -57,7 +57,7 @@ services:
       - keycloak
 
   document-store:
-    image: wa2group13/document_store:1.1.0
+    image: wa2group13/document_store:1.2.0
     ports:
       - 127.0.0.1:8082:8080
     environment:
