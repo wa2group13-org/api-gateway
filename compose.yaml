@@ -27,6 +27,8 @@ services:
       CLIENT_ID: ${CLIENT_ID}
       CLIENT_SECRET: ${CLIENT_SECRET}
       REFRESH_TOKEN: ${REFRESH_TOKEN}
+      server.error.include-message: always
+      server.error.include-binding-errors: always
       SPRING_PROFILES_ACTIVE: prod,api-docs,no-gmail
       KAFKA_PRODUCER_BOOTSTRAP_SERVERS: kafka:29092
       JWT_ISSUER_URI: http://keycloak:8080/realms/crm
@@ -37,7 +39,7 @@ services:
       - keycloak
 
   crm:
-    image: wa2group13/crm:1.2.0
+    image: wa2group13/crm:latest
     ports:
       - 127.0.0.1:8081:8080
     environment:
@@ -46,6 +48,8 @@ services:
       POSTGRES_DB: crm
       POSTGRES_USERNAME: crm
       POSTGRES_PASSWORD: crm
+      server.error.include-message: always
+      server.error.include-binding-errors: always
       SPRING_PROFILES_ACTIVE: prod,api-docs
       BASE_URL: ${BASE_URL}/crm
       KAFKA_CONSUMER_BOOTSTRAP_SERVERS: kafka:29092
@@ -66,6 +70,8 @@ services:
       POSTGRES_DB: document_store
       POSTGRES_USERNAME: document_store
       POSTGRES_PASSWORD: document_store
+      server.error.include-message: always
+      server.error.include-binding-errors: always
       SPRING_PROFILES_ACTIVE: prod,api-docs
       KAFKA_CONSUMER_BOOTSTRAP_SERVERS: kafka:29092
       JWT_ISSUER_URI: http://keycloak:8080/realms/crm
@@ -120,7 +126,7 @@ services:
 
   kafka-ui:
     hostname: kafka-ui
-    image: provectuslabs/kafka-ui:latest
+    image: provectuslabs/kafka-ui:v0.7.2
     ports:
       - 9010:8080
     environment:
@@ -131,3 +137,4 @@ services:
 volumes:
   pg-data:
   kafka-data:
+
