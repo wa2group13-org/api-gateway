@@ -31,7 +31,6 @@ jobs:
       uses: actions/setup-python@v5
 
     - name: Create documentation
-      working-directory: ./api-gateway
       run: |
         scripts/docs.py
 
@@ -40,7 +39,7 @@ jobs:
       with:
         generate_release_notes: true
         files: |
-          ./api-gateway/build/*.tar.gz
+          ./build/*.tar.gz
 
   push_to_registry:
     name: Push Docker image to Docker Hub
