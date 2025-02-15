@@ -2,13 +2,27 @@
 
 import os
 import shutil
+import fileinput
 
-services = ['crm', 'document_store', 'communication_manager']
+services = ['crm', 'document_store', 'communication_manager', 'crm-analytics']
 env_services = f'SERVICES={",".join(services)}'
 profiles = 'SPRING_PROFILES_ACTIVE=api-docs,no-security'
 
 print('Create json documentation')
 os.system(f'{env_services} {profiles} ./gradlew generateOpenApiDocs --info --rerun')
+
+print('Fix server url for each service.')
+for service in services:
+    with fileinput.FileInput(files=[f'build/openapi-{service}.json'], inplace=True) as f:
+        for line in f:
+            line = line.rstrip()
+            if '"url"' in line:
+                [key, *_] = line.split(":")
+                url = f'"http://localhost:8080/{service}"'
+                line = f'{key}:{url}'
+
+            print(line)
+
 services += ['api-gateway']
 
 print('Create ouptut folder for typescript-axios')

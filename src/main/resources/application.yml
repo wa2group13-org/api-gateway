@@ -5,6 +5,11 @@ spring:
     active:
       - dev
       - api-docs
+  docker:
+    compose:
+      lifecycle-management: none
+      readiness:
+        wait: only_if_started
 
   security:
     oauth2:
@@ -49,16 +54,23 @@ spring:
             filters:
               - StripPrefix=1
               - TokenRelay
+          - id: crm-analytics
+            uri: ${CRM_ANALYTICS_URI:lb://CRM-ANALYTICS}
+            predicates:
+              - Path=/${CRM_ANALYTICS_BASE:crm-analytics}/**
+            filters:
+              - StripPrefix=1
+              - TokenRelay
           - id: ui
-            uri: http://localhost:5173
+            uri: ${CRM_CLIENT_URI:http://localhost:5173}
             predicates:
               - Path=/ui/**
           - id: home
-            uri: http://localhost:8080
+            uri: ${CURRENT_URI:http://localhost:8080}
             predicates:
               - Path=/
             filters:
-              - RedirectTo=301,http://localhost:8080/ui
+              - RedirectTo=301,${CURRENT_URI:http://localhost:8080}/ui
 
 springdoc:
   api-docs:

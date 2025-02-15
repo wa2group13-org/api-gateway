@@ -29,7 +29,7 @@ services:
       REFRESH_TOKEN: ${REFRESH_TOKEN}
       server.error.include-message: always
       server.error.include-binding-errors: always
-      SPRING_PROFILES_ACTIVE: prod,api-docs,no-gmail
+      SPRING_PROFILES_ACTIVE: prod,api-docs
       KAFKA_PRODUCER_BOOTSTRAP_SERVERS: kafka:29092
       JWT_ISSUER_URI: http://keycloak:8080/realms/crm
       EUREKA_URI: http://eureka-server:8761/eureka
@@ -37,12 +37,14 @@ services:
     depends_on:
       - kafka
       - keycloak
+      - eureka-server
 
   crm:
-    image: wa2group13/crm:1.4.1
+    image: wa2group13/crm:latest
     ports:
       - "127.0.0.1:8081:8080"
     environment:
+      debug: "true"
       POSTGRES_URL: postgres
       POSTGRES_PORT: 5432
       POSTGRES_DB: crm
@@ -59,9 +61,10 @@ services:
       - postgres
       - kafka
       - keycloak
+      - eureka-server
 
   document-store:
-    image: wa2group13/document_store:1.2.0
+    image: wa2group13/document_store:latest
     ports:
       - "127.0.0.1:8082:8080"
     environment:
@@ -77,18 +80,55 @@ services:
       JWT_ISSUER_URI: http://keycloak:8080/realms/crm
       MULTIPART_MAX_FILE_SIZE: 10MB
       MULTIPART_MAX_REQUEST_SIZE: 10MB
+      spring.servlet.multipart.enabled: "true"
+      spring.http.multipart.enabled: "true"
       EUREKA_URI: http://eureka-server:8761/eureka
       spring.application.name: document-store
     depends_on:
       - postgres
       - kafka
       - keycloak
+      - eureka-server
+
+  crm-analytics:
+    image: wa2group13/crm-analytics:latest
+    ports:
+      - "127.0.0.1:8084:8080"
+    environment:
+      MONGODB_HOST: mongodb
+      MONGODB_PORT: 27017
+      MONGODB_DATABASE: mydatabase
+      MONGODB_USERNAME: mongo
+      MONGODB_PASSWORD: mongo
+      SPRING_PROFILES_ACTIVE: prod,api-docs
+      KAFKA_CONSUMER_BOOTSTRAP_SERVERS: kafka:29092
+      JWT_ISSUER_URI: http://keycloak:8080/realms/crm
+      spring.docker.compose.enabled: "false"
+      server.error.include-message: always
+      server.error.include-binding-errors: always
+      EUREKA_URI: http://eureka-server:8761/eureka
+    depends_on:
+      - mongodb
+      - kafka
+      - keycloak
+      - eureka-server
 
   eureka-server:
     image: wa2group13/eureka-server:1.0.0
     ports:
       - "127.0.0.1:8761:8761"
     hostname: eureka-server
+
+  mongodb:
+    image: mongo:8.0
+    ports:
+      - "127.0.0.1:27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: mydatabase
+      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_ROOT_USERNAME: root
+    volumes:
+      - ./docker/mongo/setup.js:/docker-entrypoint-initdb.d/setup.js:ro
 
   postgres:
     image: postgres:16.2

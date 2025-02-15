@@ -14,6 +14,10 @@
 - `DOCUMENT_STORE_BASE`: base path for redirection. Default: `document_store`
 - `COMMUNICATION_MANGER_URI`: uri of the Communication Manager: Default: `http://localhost:8083`
 - `COMMUNICATION_MANAGER_BASE`: base path for redirection: Default: `communication_manager`
+- `CRM_ANALYTICS_URI`: uri of the CRM Analytics service: Default: `http://localhost:8084`
+- `CRM_ANALYTICS_BASE`: base path for redirection: Default: `crm-analytics`
+- `CURRENT_URI`: current uri where the server is located. Default: `http://localhost:8080`
+- `CRM_CLIENT_URI`: URI of the CRM client react application. Default: `http://localhost:5173`
 - `OPENAPI_BASE_URL`: base url of this service that will appear in the OpenAPI documentation.
   Default `http://localhost:${PORT}`
 - `PORT`: server port. Default: `8080`

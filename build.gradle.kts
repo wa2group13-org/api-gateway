@@ -123,7 +123,7 @@ tasks.generateOpenApiDocs {
 // Make the output generation much easier by using an ENV for specifying the
 // generatorName
 tasks.openApiGenerate {
-    dependsOn(tasks.generateOpenApiDocs)
+//    dependsOn(tasks.generateOpenApiDocs)
     generatorName = System.getenv("GENERATOR_NAME")
     inputSpec = "${layout.buildDirectory.get()}/${System.getenv("INPUT_SPEC")}"
     outputDir = "${layout.buildDirectory.get()}/openapi-gen/${System.getenv("GENERATOR_NAME")}"
@@ -132,8 +132,4 @@ tasks.openApiGenerate {
 tasks.asciidoctor {
     setSourceDir(file("${layout.buildDirectory.get()}/openapi-gen/asciidoc"))
     setOutputDir(file("${layout.buildDirectory.get()}/docs"))
-}
-
-tasks.register("createDocs") {
-    task("kajdfs")
 }
