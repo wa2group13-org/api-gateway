@@ -6,7 +6,7 @@ import fileinput
 
 services = ['crm', 'document_store', 'communication_manager', 'crm-analytics']
 env_services = f'SERVICES={",".join(services)}'
-profiles = 'SPRING_PROFILES_ACTIVE=api-docs,no-security'
+profiles = 'SPRING_PROFILES_ACTIVE=dev,api-docs,no-security'
 
 print('Create json documentation')
 os.system(f'{env_services} {profiles} ./gradlew generateOpenApiDocs --info --rerun')
