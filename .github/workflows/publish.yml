@@ -41,7 +41,7 @@ jobs:
         files: |
           ./build/*.tar.gz
 
-  push_to_registry:
+  push-to-registry:
     name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
     permissions:
